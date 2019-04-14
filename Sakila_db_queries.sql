@@ -126,7 +126,7 @@ SELECT last_name, first_name FROM actor WHERE actor_id IN
 
 SELECT country, last_name, first_name, email FROM country c 
 LEFT JOIN customer cu ON c.country_id = cu.customer_id
-WHERE country = "CANADA";
+WHERE country = "Canada";
 
 -- (7d): Identify all movies categorized as __family__ films
 
@@ -135,17 +135,17 @@ WHERE category = "Family";
 
 -- (7e): Display the most frequently rented movies in descending order
 
-SELECT i.film_id, f.title, COUNT(r.inventory_id) FROM inventory i 
-INNER JOIN rental r ON i.inventory_id = r.inventory_id
-INNER JOIN film_text f ON i.film_id = f.film_id
+SELECT i.film_id, f.title, COUNT(r.inventory_id) AS Inventory FROM inventory i 
+	INNER JOIN rental r ON i.inventory_id = r.inventory_id
+	INNER JOIN film_text f ON i.film_id = f.film_id
 GROUP BY r.inventory_id
 ORDER BY COUNT(r.inventory_id) DESC;
 
 -- (7f): Find how much business, in dollars, each store brought in 
 
 SELECT store.store_id, SUM(amount) FROM store
-INNER JOIN staff ON store.store_id = staff.store_id
-INNER JOIN payment p ON p.staff_id = staff.staff_id
+	INNER JOIN staff ON store.store_id = staff.store_id
+	INNER JOIN payment p ON p.staff_id = staff.staff_id
 GROUP BY store.store_id
 ORDER BY SUM(amount);
 
@@ -153,24 +153,40 @@ ORDER BY SUM(amount);
 -- (7g): Display for each store: store ID, city and country
 
 SELECT s.store_id, city, country FROM store s
-INNER JOIN customer cu ON s.store_id = cu.store_id
-INNER JOIN staff st ON s.store_id = st.store_id
-INNER JOIN address a on cu.address_id = a.address_id
-INNER JOIN city ci ON a.city_id = ci.city_id
-INNER JOIN country coun ON ci.country_id = coun.country_id;
+	INNER JOIN customer cu ON s.store_id = cu.store_id
+	INNER JOIN staff st ON s.store_id = st.store_id
+	INNER JOIN address a on cu.address_id = a.address_id
+	INNER JOIN city ci ON a.city_id = ci.city_id
+	INNER JOIN country coun ON ci.country_id = coun.country_id;
 
 -- (7h): List top five genres in gross revenue in descending order (tables: category, film_category, inventory, payment and rental)
 
 SELECT c.name AS "Genre", SUM(p.amount) AS "Gross" FROM cateogry c
-JOIN film_category fc ON (c.category_id = fc.category_id)
-JOIN invenotry i ON (fc.film_id = i.film_id)
-JOIN rental r ON (i.inventory_id = r.inventory_id)
-JOIN payment p ON (r.rental_id = p.rental_id)
+	JOIN film_category fc ON (c.category_id = fc.category_id)
+	JOIN invenotry i ON (fc.film_id = i.film_id)
+	JOIN rental r ON (i.inventory_id = r.inventory_id)
+	JOIN payment p ON (r.rental_id = p.rental_id)
 GROUP BY c.name
 ORDER BY Gross
 LIMIT 5;
 
 -- Section 8 --
 -- (8a): Create a view to the Top five genres by gross revenue
+
+CREATE VIEW top_five_grossing_genres AS
+SELECT c.name AS "Genre", SUM(p.amount) AS "Gross" FROM category c
+	JOIN film_category fc ON (c.category_id = fc.cateogry_id)
+    JOIN inventory i ON (fc.film_id = i.film_id)
+    JOIN rental r ON (i.inventory_id = r.inventory_id)
+    JOIN payment p ON (r.rental_id = p.rental_id)
+GROUP BY c.name
+ORDER BY Gross
+Limit 5;
+
 -- (8b): Display the view created above
+
+SELECT * FROM top_five_grossing_genres
+
 -- (8c): Delete the above created view
+
+DROP VIEW top_give_grossing_genres;
