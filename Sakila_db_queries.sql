@@ -17,3 +17,10 @@ SELECT last_name, first_name FROM actor WHERE last_name LIKE "%LI%" ORDER BY las
 
 -- Question (2d): Using 'IN', display the 'country_id' and 'country' coluns of the countries: Afghanistan, Bangladesh, China
 SELECT country_id, country FROM country WHERE country in ("Afghanistan", "Bangladesh", "China");
+
+-- Question (3a): Create a column in the table 'actor' named 'description' and use the data type 'BLOB' 
+ALTER TABLE actor ADD description BLOB;
+
+-- Question (3b): Delete the 'description' column
+ALTER TABLE actor DROP COLUMN description;
+
